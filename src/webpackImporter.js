@@ -31,7 +31,12 @@ const matchCss = /\.css$/;
  * @param {Function<string>} addNormalizedDependency
  * @returns {Importer}
  */
-function webpackImporter(resourcePath, resolve, addNormalizedDependency) {
+function webpackImporter(
+  resourcePath,
+  resolve,
+  addNormalizedDependency,
+  getVars
+) {
   function dirContextFrom(fileContext) {
     return path.dirname(
       // The first file is 'stdin' when we're using the data option
@@ -69,7 +74,15 @@ function webpackImporter(resourcePath, resolve, addNormalizedDependency) {
           file: url,
         };
       })
-      .then(done);
+      .then((resolved) => {
+        if (resolved.file.includes('includeIf=$')) {
+          const variables = getVars();
+          const variable = resolved.file.split('includeIf=$')[1].split('.')[0];
+          if (!variables[variable]) resolved.contents = '';
+          resolved.file = resolved.file.split('?')[0];
+        }
+        done(resolved);
+      });
   };
 }
 

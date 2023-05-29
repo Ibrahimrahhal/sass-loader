@@ -36,7 +36,7 @@ function hasGetResolve(loaderContext) {
  */
 function loader(content) {
   const options = getOptions(this) || {};
-
+  const getVars = () => options.vars;
   const callback = this.async();
   const addNormalizedDependency = (file) => {
     // node-sass returns POSIX paths
@@ -69,7 +69,12 @@ function loader(content) {
 
   if (shouldUseWebpackImporter) {
     sassOptions.importer.push(
-      webpackImporter(this.resourcePath, resolve, addNormalizedDependency)
+      webpackImporter(
+        this.resourcePath,
+        resolve,
+        addNormalizedDependency,
+        getVars
+      )
     );
   }
 

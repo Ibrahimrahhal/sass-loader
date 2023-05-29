@@ -1,5 +1,5 @@
 {
-  "name": "sass-loader",
+  "name": "@ibrahim-rahhal/sass-loader",
   "version": "7.3.1",
   "description": "Sass loader for webpack",
   "license": "MIT",
